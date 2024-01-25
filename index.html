@@ -21,19 +21,21 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" async></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js" async></script>
     <script>
-        // Инициализация Materialize CSS элементов
+        /**
+         * Initialize Materialize CSS components when the document is loaded.
+         */
         document.addEventListener('DOMContentLoaded', function() {
             M.AutoInit();
         });
 
-        // JavaScript код для отправки POST-запроса
+        /**
+         * Event listener for note submission form. Sends an async POST request with the note data.
+         */
         document.getElementById('noteForm').addEventListener('submit', async function(event) {
-            event.preventDefault(); // Предотвращаем стандартное поведение отправки формы
-            // Получаем данные из полей формы
+            event.preventDefault();
             var secretPhrase = document.getElementById('secretPhrase').value;
             var noteText = document.getElementById('noteText').value;
 
-            // Отправляем POST запрос на сервер
             try {
                 const response = await fetch('/create_note', {
                     method: 'POST',
@@ -43,28 +45,25 @@
                     }
                 });
                 const data = await response.json();
-                // После успешного ответа переходим на страницу результата
                 if (data.response === "ok") {
                     document.location.href = "/result/" + data.note_id
                 }
             } catch (error) {
-                // Обработка ошибок, если необходимо
-                console.error('Ошибка:', error);
-            };
+                console.error('An error occurred:', error);
+            }
 
-            // Очищаем поля ввода после отправки
             document.getElementById('secretPhrase').value = '';
             document.getElementById('noteText').value = '';
         });
 
-        // JavaScript код для обработки события получения записок
+        /**
+         * Event listener for getting notes from the server using a POST request.
+         */
         document.getElementById('getNoteForm').addEventListener('submit', async function(event) {
-            event.preventDefault(); // Предотвращаем стандартное поведение отправки формы
-            // Получаем данные из полей формы
+            event.preventDefault();
             var noteId = document.getElementById('noteId').value;
             var getSecretPhrase = document.getElementById('getSecretPhrase').value;
 
-            // Отправляем POST запрос на сервер
             try {
                 const response = await fetch('/get_note', {
                     method: 'POST',
@@ -78,9 +77,8 @@
                     document.location.href = "/note_page/" + data.note_final_text
                 }
             } catch (error) {
-                // Обработка ошибок, если необходимо
-                console.error('Ошибка:', error);
-            };
+                console.error('An error occurred:', error);
+            }
         });
     </script>
 </body>
