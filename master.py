@@ -33,18 +33,15 @@ class NoteManager:
 
     def get_note(self, note_data: NoteID):
         """Get a note from the notes list by its ID and secret."""
-        note_index = None
-        for i, note in enumerate(self.notes_list.all_notes):
-            if (note_data.note_id == note.note_hash and
-                    note_data.note_secret == note.secret):
-                note_index = i
-                break
+        note_index = next((i for i in range(len(self.notes_list.all_notes)) if note_data.note_id == self.notes_list.all_notes[i].note_hash and note_data.note_secret == self.notes_list.all_notes[i].secret), None)
 
         if note_index is None:
             raise ValueError("Such a note does not exist")
 
-        note = self.notes_list.all_notes.pop(note_index)
+        note = self.notes_list.all_notes[note_index]
+        self.notes_list.all_notes.remove(note)
         return {"response": "ok", "note_final_text": note.text}
+    
 
 @app.get("/note_page/{note_text}", response_class=HTMLResponse)
 async def get_result_note(request: Request, note_text: str):
